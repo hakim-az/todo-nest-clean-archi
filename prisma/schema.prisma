@@ -23,11 +23,11 @@ model Salarie {
   prenom                String
   nomDeNaissance        String
   nomUsuel              String
-  situationFamiliale    BigInt
+  situationFamiliale    String
   emailPerso            String
   emailPro              String
-  telPerso              String
-  telPro                String
+  telPerso              Int
+  telPro                Int
 
   naissanceId           BigInt
   adresseId             BigInt
@@ -65,7 +65,7 @@ model Naissance {
 model Adresse {
   id                  BigInt   @id @default(autoincrement())
   pays                String
-  codePostal          BigInt
+  codePostal          Int
   ville               String
   adresse             String
   complementAdresse   String
@@ -75,8 +75,8 @@ model Adresse {
 
 model Paiement {
   id      BigInt  @id @default(autoincrement())
-  iban    BigInt
-  bic     BigInt
+  iban    String
+  bic     String
 
   salaries Salarie[]
 }
