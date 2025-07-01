@@ -12,14 +12,14 @@ import {
 } from '@nestjs/common'
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger'
 import { CreateTodoDto } from '../../../application/dtos/todo/create-todo.dto'
-import { UpdateTodoDto } from '../../../application/dtos/update-todo.dto'
-import { TodoResponseDto } from '../../../application/dtos/todo-response.dto'
+import { UpdateTodoDto } from '../../../application/dtos/todo/update-todo.dto'
+import { TodoResponseDto } from '../../../application/dtos/todo/todo-response.dto'
 import { CreateTodoUseCase } from '../../../application/use-cases/todo/create-todo.use-case'
-import { GetAllTodosUseCase } from '../../../application/use-cases/get-all-todos.use-case'
-import { GetTodoByIdUseCase } from '../../../application/use-cases/get-todo-by-id.use-case'
+import { GetAllTodosUseCase } from '../../../application/use-cases/todo/get-all-todos.use-case'
+import { GetTodoByIdUseCase } from '../../../application/use-cases/todo/get-todo-by-id.use-case'
 import { UpdateTodoUseCase } from '../../../application/use-cases/todo/update-todo.use-case'
-import { DeleteTodoUseCase } from '../../../application/use-cases/delete-todo.use-case'
-import { GetTodosByStatusUseCase } from '../../../application/use-cases/get-todos-by-status.use-case'
+import { DeleteTodoUseCase } from '../../../application/use-cases/todo/delete-todo.use-case'
+import { GetTodosByStatusUseCase } from '../../../application/use-cases/todo/get-todos-by-status.use-case'
 
 @ApiTags('todos')
 @Controller('todos')
