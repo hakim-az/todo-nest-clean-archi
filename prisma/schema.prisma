@@ -15,3 +15,102 @@ model todo {
   createdAt   DateTime @default(now())
   updatedAt   DateTime
 }
+
+
+model Salarie {
+  id                     BigInt       @id @default(autoincrement())
+  status                String
+  prenom                String
+  nomDeNaissance        String
+  nomUsuel              String
+  situationFamiliale    BigInt
+  emailPerso            String
+  emailPro              String
+  telPerso              String
+  telPro                String
+
+  naissanceId           BigInt
+  adresseId             BigInt
+  paiementId            BigInt
+  contactUrgenceId      BigInt
+  piecesJustificatifId  BigInt
+  contratId             BigInt
+
+  naissance             Naissance     @relation(fields: [naissanceId], references: [id])
+  adresse               Adresse       @relation(fields: [adresseId], references: [id])
+  paiement              Paiement      @relation(fields: [paiementId], references: [id])
+  contactUrgence        ContactUrgence @relation(fields: [contactUrgenceId], references: [id])
+  piecesJustificatif    PiecesJustificatif @relation(fields: [piecesJustificatifId], references: [id])
+  contrat               Contrat       @relation(fields: [contratId], references: [id])
+
+  @@index([naissanceId])
+  @@index([adresseId])
+  @@index([paiementId])
+  @@index([contactUrgenceId])
+  @@index([piecesJustificatifId])
+  @@index([contratId])
+}
+
+model Naissance {
+  id                    BigInt     @id @default(autoincrement())
+  dateDeNaissance       DateTime
+  paysDeNaissance       String
+  departmentDeNaissance String
+  communeDeNaissance    String
+  paysDeNationalite     String
+
+  salaries              Salarie[]
+}
+
+model Adresse {
+  id                  BigInt   @id @default(autoincrement())
+  pays                String
+  codePostal          BigInt
+  ville               String
+  adresse             String
+  complementAdresse   String
+
+  salaries            Salarie[]
+}
+
+model Paiement {
+  id      BigInt  @id @default(autoincrement())
+  iban    BigInt
+  bic     BigInt
+
+  salaries Salarie[]
+}
+
+model ContactUrgence {
+  id              BigInt  @id @default(autoincrement())
+  nomComplet      String
+  lienAvecSalarie String
+  tel             BigInt
+
+  salaries        Salarie[]
+}
+
+model PiecesJustificatif {
+  id                     BigInt  @id @default(autoincrement())
+  carteVitale            String
+  rib                    String
+  pieceIdentite          String
+  justificatifDeDomicile String
+
+  salaries               Salarie[]
+}
+
+model Contrat {
+  id               BigInt  @id @default(autoincrement())
+  poste            String
+  typeContrat      String
+  dateDebut        DateTime
+  dateFin          DateTime
+  etablissemnetSante String
+  serviceSante     String
+  salaire          BigInt
+  urlPdfNonSigner  String
+  urlPdfSigner     String
+
+  salaries         Salarie[]
+}

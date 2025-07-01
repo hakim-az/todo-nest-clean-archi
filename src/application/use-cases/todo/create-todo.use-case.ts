@@ -4,7 +4,7 @@ import { Todo } from '../../../domain/entities/todo/todo.entity'
 import {
   TodoRepository,
   TODO_REPOSITORY,
-} from '../../../domain/contracts/todo-repository.interface'
+} from '../../../domain/contracts/todo/todo-repository.interface'
 import { CreateTodoDto } from '../../dtos/todo/create-todo.dto'
 
 @Injectable()
