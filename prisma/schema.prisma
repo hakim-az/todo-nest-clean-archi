@@ -34,14 +34,14 @@ model Salarie {
   paiementId            BigInt
   contactUrgenceId      BigInt
   piecesJustificatifId  BigInt
-  contratId             BigInt
+  contratId             BigInt?
 
   naissance             Naissance     @relation(fields: [naissanceId], references: [id])
   adresse               Adresse       @relation(fields: [adresseId], references: [id])
   paiement              Paiement      @relation(fields: [paiementId], references: [id])
   contactUrgence        ContactUrgence @relation(fields: [contactUrgenceId], references: [id])
   piecesJustificatif    PiecesJustificatif @relation(fields: [piecesJustificatifId], references: [id])
-  contrat               Contrat       @relation(fields: [contratId], references: [id])
+  contrat               Contrat?       @relation(fields: [contratId], references: [id])
 
   @@index([naissanceId])
   @@index([adresseId])
@@ -85,7 +85,7 @@ model ContactUrgence {
   id              BigInt  @id @default(autoincrement())
   nomComplet      String
   lienAvecSalarie String
-  tel             BigInt
+  tel             Int
 
   salaries        Salarie[]
 }
@@ -108,7 +108,7 @@ model Contrat {
   dateFin          DateTime
   etablissemnetSante String
   serviceSante     String
-  salaire          BigInt
+  salaire          Int
   urlPdfNonSigner  String
   urlPdfSigner     String
 

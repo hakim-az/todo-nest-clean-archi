@@ -5,11 +5,12 @@ import {
   IsOptional,
   MaxLength,
   IsEmail,
-  IsPhoneNumber,
+  // IsPhoneNumber,
   IsNumber,
 } from 'class-validator'
 
 export class CreateSalarieDto {
+  // salarie feilds ---------------------------------------------------------------------------
   @ApiProperty({
     description: 'Prénom du salarié',
     example: 'John',
@@ -81,7 +82,7 @@ export class CreateSalarieDto {
   @IsNumber()
   telPro: number
 
-  // Naissance fields
+  // Naissance fields ------------------------------------------------------------------------------
   @ApiProperty({
     description: 'Date de naissance (ISO)',
     example: '1990-01-01',
@@ -139,7 +140,7 @@ export class CreateSalarieDto {
   @IsOptional()
   complementAdresse: string
 
-  // Paiement fields
+  // Paiement fields ----------------------------------------------------------------------------------
   @ApiProperty({ description: 'IBAN', example: '1234567890' })
   @IsString()
   @IsNotEmpty()
@@ -150,7 +151,7 @@ export class CreateSalarieDto {
   @IsNotEmpty()
   bic: string
 
-  // Contact urgence fields
+  // Contact urgence fields ----------------------------------------------------------------------------
   @ApiProperty({
     description: "Nom complet du contact d'urgence",
     example: 'Marie Dupont',
@@ -166,12 +167,12 @@ export class CreateSalarieDto {
 
   @ApiProperty({
     description: "Téléphone du contact d'urgence",
-    example: '+33123456789',
+    example: 33123456789,
   })
-  @IsPhoneNumber('FR')
+  @IsNumber()
   tel: number
 
-  // Pièces justificatives fields
+  // Pièces justificatives fields --------------------------------------------------------------------
   @ApiProperty({
     description: 'Carte vitale (url ou ref)',
     example: 'carte-vitale.jpg',
@@ -201,15 +202,15 @@ export class CreateSalarieDto {
   @IsNotEmpty()
   justificatifDeDomicile: string
 
-  // Contrat fields
+  // Contrat fields ------------------------------------------------------------------------------------
   @ApiProperty({ description: 'Poste occupé', example: 'Développeur' })
   @IsString()
-  @IsNotEmpty()
-  poste: string
+  @IsOptional()
+  poste?: string
 
   @ApiProperty({ description: 'Type de contrat', example: 'CDI' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   typeContrat: string
 
   @ApiProperty({
@@ -217,8 +218,8 @@ export class CreateSalarieDto {
     example: '2023-01-01',
   })
   @IsString()
-  @IsNotEmpty()
-  dateDebut: Date
+  @IsOptional()
+  dateDebut?: Date
 
   @ApiProperty({
     description: 'Date fin contrat (ISO)',
@@ -227,35 +228,36 @@ export class CreateSalarieDto {
   })
   @IsString()
   @IsOptional()
-  dateFin: Date
+  dateFin?: Date
 
   @ApiProperty({
     description: 'Etablissement de santé',
     example: 'Hôpital de Paris',
   })
   @IsString()
-  @IsNotEmpty()
-  etablissemnetSante: string
+  @IsOptional()
+  etablissemnetSante?: string
 
   @ApiProperty({ description: 'Service santé', example: 'Cardiologie' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   serviceSante: string
 
   @ApiProperty({ description: 'Salaire', example: 3500 })
   @IsNumber()
-  salaire: number
+  @IsOptional()
+  salaire?: number
 
   @ApiProperty({
     description: 'URL PDF non signé',
     example: 'contrat-non-signe.pdf',
   })
   @IsString()
-  @IsNotEmpty()
-  urlPdfNonSigner: string
+  @IsOptional()
+  urlPdfNonSigner?: string
 
   @ApiProperty({ description: 'URL PDF signé', example: 'contrat-signe.pdf' })
   @IsString()
-  @IsNotEmpty()
-  urlPdfSigner: string
+  @IsOptional()
+  urlPdfSigner?: string
 }

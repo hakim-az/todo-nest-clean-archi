@@ -23,7 +23,7 @@ export class Salarie {
     public paiement: Paiement,
     public contactUrgence: ContactUrgence,
     public piecesJustificatif: PiecesJustificatif,
-    public contrat: Contrat
+    public contrat?: Contrat
   ) {}
 
   static create(props: Omit<Salarie, 'id'>): Salarie {

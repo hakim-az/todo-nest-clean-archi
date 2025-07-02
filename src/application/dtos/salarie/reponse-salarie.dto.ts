@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger'
 import { Salarie } from '../../../domain/entities/salarie/salarie.entity'
+import { Contrat } from '@prisma/client'
 
 export class SalarieResponseDto {
   @ApiProperty({ example: '1234567890' })
@@ -84,25 +85,25 @@ export class SalarieResponseDto {
   justificatifDeDomicile: string
 
   @ApiProperty({ example: 'Développeur' })
-  poste: string
+  poste?: string
 
   @ApiProperty({ example: 'CDI' })
-  typeContrat: string
+  typeContrat?: string
 
   @ApiProperty({ example: '2023-01-01T00:00:00.000Z' })
-  dateDebut: Date
+  dateDebut?: Date
 
   @ApiProperty({ example: '2024-01-01T00:00:00.000Z', nullable: true })
   dateFin?: Date | null
 
   @ApiProperty({ example: 'Hôpital Saint-Louis' })
-  etablissemnetSante: string
+  etablissemnetSante?: string
 
   @ApiProperty({ example: 'Service informatique' })
-  serviceSante: string
+  serviceSante?: string
 
   @ApiProperty({ example: 3500 })
-  salaire: number
+  salaire?: number
 
   @ApiProperty({
     example: 'https://example.com/contrat-non-signe.pdf',
@@ -117,6 +118,8 @@ export class SalarieResponseDto {
   urlPdfSigner?: string | null
 
   static fromDomain(salarie: Salarie): SalarieResponseDto {
+    const contrat = salarie.contrat ?? ({} as Contrat)
+
     return {
       id: salarie.id.toString(),
       prenom: salarie.prenom,
@@ -126,7 +129,7 @@ export class SalarieResponseDto {
       emailPerso: salarie.emailPerso ?? null,
       emailPro: salarie.emailPro ?? null,
       telPerso: salarie.telPerso.toString(),
-      telPro: salarie.telPro ? salarie.telPro.toString() : null,
+      telPro: salarie.telPro.toString(),
       dateDeNaissance: salarie.naissance.dateDeNaissance,
       paysDeNaissance: salarie.naissance.paysDeNaissance,
       departmentDeNaissance: salarie.naissance.departmentDeNaissance,
@@ -145,15 +148,15 @@ export class SalarieResponseDto {
       rib: salarie.piecesJustificatif.rib,
       pieceIdentite: salarie.piecesJustificatif.pieceIdentite,
       justificatifDeDomicile: salarie.piecesJustificatif.justificatifDeDomicile,
-      poste: salarie.contrat.poste,
-      typeContrat: salarie.contrat.typeContrat,
-      dateDebut: salarie.contrat.dateDebut,
-      dateFin: salarie.contrat.dateFin ?? null,
-      etablissemnetSante: salarie.contrat.etablissemnetSante,
-      serviceSante: salarie.contrat.serviceSante,
-      salaire: salarie.contrat.salaire,
-      urlPdfNonSigner: salarie.contrat.urlPdfNonSigner ?? null,
-      urlPdfSigner: salarie.contrat.urlPdfSigner ?? null,
+      poste: contrat.poste ?? '',
+      typeContrat: contrat.typeContrat ?? '',
+      dateDebut: contrat.dateDebut ?? new Date(0),
+      dateFin: contrat.dateFin ?? null,
+      etablissemnetSante: contrat.etablissemnetSante ?? '',
+      serviceSante: contrat.serviceSante ?? '',
+      salaire: contrat.salaire ?? 0,
+      urlPdfNonSigner: contrat.urlPdfNonSigner ?? null,
+      urlPdfSigner: contrat.urlPdfSigner ?? null,
     }
   }
 }

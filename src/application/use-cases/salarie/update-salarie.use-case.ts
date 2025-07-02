@@ -28,22 +28,73 @@ export class UpdateSalarieUseCase {
       throw new NotFoundException(`Salarie with id ${id} not found`)
     }
 
+    const hasContratUpdate =
+      updateSalarieDto.poste !== undefined ||
+      updateSalarieDto.typeContrat !== undefined ||
+      updateSalarieDto.dateDebut !== undefined ||
+      updateSalarieDto.dateFin !== undefined ||
+      updateSalarieDto.etablissemnetSante !== undefined ||
+      updateSalarieDto.serviceSante !== undefined ||
+      updateSalarieDto.salaire !== undefined ||
+      updateSalarieDto.urlPdfNonSigner !== undefined ||
+      updateSalarieDto.urlPdfSigner !== undefined
+
+    // Safe contract creation or update
+    let updatedContrat: Contrat | undefined
+    if (hasContratUpdate) {
+      if (existing.contrat) {
+        updatedContrat = new Contrat(
+          existing.contrat.id,
+          updateSalarieDto.poste ?? existing.contrat.poste,
+          updateSalarieDto.typeContrat ?? existing.contrat.typeContrat,
+          updateSalarieDto.dateDebut
+            ? new Date(updateSalarieDto.dateDebut)
+            : existing.contrat.dateDebut,
+          updateSalarieDto.dateFin
+            ? new Date(updateSalarieDto.dateFin)
+            : existing.contrat.dateFin,
+          updateSalarieDto.etablissemnetSante ??
+            existing.contrat.etablissemnetSante,
+          updateSalarieDto.serviceSante ?? existing.contrat.serviceSante,
+          updateSalarieDto.salaire ?? existing.contrat.salaire,
+          updateSalarieDto.urlPdfNonSigner ?? existing.contrat.urlPdfNonSigner,
+          updateSalarieDto.urlPdfSigner ?? existing.contrat.urlPdfSigner
+        )
+      } else {
+        // Create new contract if none existed before
+        updatedContrat = new Contrat(
+          0n,
+          updateSalarieDto.poste ?? '',
+          updateSalarieDto.typeContrat ?? '',
+          updateSalarieDto.dateDebut
+            ? new Date(updateSalarieDto.dateDebut)
+            : new Date(0),
+          updateSalarieDto.dateFin
+            ? new Date(updateSalarieDto.dateFin)
+            : new Date(0),
+          updateSalarieDto.etablissemnetSante ?? '',
+          updateSalarieDto.serviceSante ?? '',
+          updateSalarieDto.salaire ?? 0,
+          updateSalarieDto.urlPdfNonSigner ?? '',
+          updateSalarieDto.urlPdfSigner ?? ''
+        )
+      }
+    } else {
+      updatedContrat = existing.contrat
+    }
+
     const updatedSalarie = Salarie.create({
-      // Champs simples
       prenom: updateSalarieDto.prenom ?? existing.prenom,
       nomDeNaissance:
         updateSalarieDto.nomDeNaissance ?? existing.nomDeNaissance,
       nomUsuel: updateSalarieDto.nomUsuel ?? existing.nomUsuel,
       status: updateSalarieDto.status ?? existing.status,
-      situationFamiliale: updateSalarieDto.situationFamiliale
-        ? updateSalarieDto.situationFamiliale
-        : existing.situationFamiliale,
+      situationFamiliale:
+        updateSalarieDto.situationFamiliale ?? existing.situationFamiliale,
       emailPerso: updateSalarieDto.emailPerso ?? existing.emailPerso,
       emailPro: updateSalarieDto.emailPro ?? existing.emailPro,
       telPerso: updateSalarieDto.telPerso ?? existing.telPerso,
       telPro: updateSalarieDto.telPro ?? existing.telPro,
-
-      // Sous-objets à reconstruire proprement
 
       naissance:
         updateSalarieDto.dateDeNaissance ||
@@ -76,9 +127,7 @@ export class UpdateSalarieUseCase {
           ? new Adresse(
               existing.adresse.id,
               updateSalarieDto.pays ?? existing.adresse.pays,
-              updateSalarieDto.codePostal
-                ? updateSalarieDto.codePostal
-                : existing.adresse.codePostal,
+              updateSalarieDto.codePostal ?? existing.adresse.codePostal,
               updateSalarieDto.ville ?? existing.adresse.ville,
               updateSalarieDto.adresse ?? existing.adresse.adresse,
               updateSalarieDto.complementAdresse ??
@@ -125,37 +174,9 @@ export class UpdateSalarieUseCase {
             )
           : existing.piecesJustificatif,
 
-      contrat:
-        updateSalarieDto.poste ||
-        updateSalarieDto.typeContrat ||
-        updateSalarieDto.dateDebut ||
-        updateSalarieDto.dateFin ||
-        updateSalarieDto.etablissemnetSante ||
-        updateSalarieDto.serviceSante ||
-        updateSalarieDto.salaire ||
-        updateSalarieDto.urlPdfNonSigner ||
-        updateSalarieDto.urlPdfSigner
-          ? new Contrat(
-              existing.contrat.id,
-              updateSalarieDto.poste ?? existing.contrat.poste,
-              updateSalarieDto.typeContrat ?? existing.contrat.typeContrat,
-              updateSalarieDto.dateDebut
-                ? new Date(updateSalarieDto.dateDebut)
-                : existing.contrat.dateDebut,
-              updateSalarieDto.dateFin
-                ? new Date(updateSalarieDto.dateFin)
-                : existing.contrat.dateFin,
-              updateSalarieDto.etablissemnetSante ??
-                existing.contrat.etablissemnetSante,
-              updateSalarieDto.serviceSante ?? existing.contrat.serviceSante,
-              updateSalarieDto.salaire ?? existing.contrat.salaire,
-              updateSalarieDto.urlPdfNonSigner ??
-                existing.contrat.urlPdfNonSigner,
-              updateSalarieDto.urlPdfSigner ?? existing.contrat.urlPdfSigner
-            )
-          : existing.contrat,
+      contrat: updatedContrat,
 
-      // TODO: ajouter d’autres propriétés si besoin
+      // Add other properties as needed
     })
 
     return this.salarieRepository.update(id, updatedSalarie)

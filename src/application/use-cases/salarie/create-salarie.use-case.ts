@@ -20,7 +20,31 @@ export class CreateSalarieUseCase {
   ) {}
 
   async execute(createSalarieDto: CreateSalarieDto): Promise<Salarie> {
-    // Mapper le DTO vers un objet Salarie complet
+    const contrat =
+      createSalarieDto.poste &&
+      createSalarieDto.typeContrat &&
+      createSalarieDto.dateDebut &&
+      createSalarieDto.etablissemnetSante &&
+      createSalarieDto.serviceSante &&
+      createSalarieDto.salaire !== undefined &&
+      createSalarieDto.urlPdfNonSigner &&
+      createSalarieDto.urlPdfNonSigner
+        ? new Contrat(
+            0n,
+            createSalarieDto.poste,
+            createSalarieDto.typeContrat,
+            new Date(createSalarieDto.dateDebut),
+            createSalarieDto.dateFin
+              ? new Date(createSalarieDto.dateFin)
+              : null,
+            createSalarieDto.etablissemnetSante,
+            createSalarieDto.serviceSante,
+            createSalarieDto.salaire,
+            createSalarieDto.urlPdfNonSigner,
+            createSalarieDto.urlPdfNonSigner
+          )
+        : undefined
+
     const salarie = Salarie.create({
       ...createSalarieDto,
       situationFamiliale: createSalarieDto.situationFamiliale,
@@ -54,23 +78,9 @@ export class CreateSalarieUseCase {
         createSalarieDto.pieceIdentite,
         createSalarieDto.justificatifDeDomicile
       ),
-      contrat: new Contrat(
-        0n,
-        createSalarieDto.poste,
-        createSalarieDto.typeContrat,
-        new Date(createSalarieDto.dateDebut),
-        new Date(createSalarieDto.dateFin),
-        createSalarieDto.etablissemnetSante,
-        createSalarieDto.serviceSante,
-        createSalarieDto.salaire,
-        createSalarieDto.urlPdfNonSigner,
-        createSalarieDto.urlPdfSigner
-      ),
+      contrat, // optional
     })
 
     return await this.salarieRepository.create(salarie)
   }
-}
-function uuidv4(): bigint {
-  throw new Error('Function not implemented.')
 }

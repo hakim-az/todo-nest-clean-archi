@@ -4,7 +4,7 @@ export class Contrat {
     public poste: string,
     public typeContrat: string,
     public dateDebut: Date,
-    public dateFin: Date,
+    public dateFin: Date | null,
     public etablissemnetSante: string,
     public serviceSante: string,
     public salaire: number,
